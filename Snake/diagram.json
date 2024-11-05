@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0.6, "left": 105, "attrs": {} },
+    {
+      "type": "wokwi-analog-joystick",
+      "id": "joystick1",
+      "top": -202.2,
+      "left": -42.6,
+      "attrs": {}
+    },
+    {
+      "type": "board-grove-oled-sh1107",
+      "id": "oled1",
+      "top": -221.03,
+      "left": 79.9,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [ "joystick1:VCC", "uno:5V", "red", [ "v48", "h332.2" ] ],
+    [ "joystick1:GND", "uno:GND.2", "black", [ "v67.2", "h303.3" ] ],
+    [ "joystick1:VERT", "uno:A0", "green", [ "v86.4", "h370.6" ] ],
+    [ "joystick1:HORZ", "uno:A1", "gold", [ "v105.6", "h370.5" ] ],
+    [ "oled1:GND.1", "uno:GND.2", "black", [ "h0" ] ],
+    [ "oled1:VCC", "uno:5V", "red", [ "h57.6", "v326.5" ] ],
+    [ "oled1:SDA", "uno:A4", "green", [ "h0" ] ],
+    [ "oled1:SCL.1", "uno:A5", "gold", [ "h115.2", "v307.3" ] ]
+  ],
+  "dependencies": {}
+}
