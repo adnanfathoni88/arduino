@@ -1,0 +1,64 @@
+  #define BLYNK_TEMPLATE_ID ""
+  #define BLYNK_TEMPLATE_NAME "Tongkat Tunanetra"
+  #define BLYNK_AUTH_TOKEN ""
+
+  #include <WiFi.h>
+  #include <BlynkSimpleEsp32.h>
+  #include <TimeLib.h>
+  #include <WiFiUdp.h>
+  #include <NTPClient.h>
+
+  // WiFi credentials
+  char ssid[] = "Wokwi-GUEST";
+  char pass[] = "";
+
+  // NTP setup
+  WiFiUDP udp;
+  NTPClient timeClient(udp, "pool.ntp.org", 7 * 3600, 60000); // Offset UTC +7 (Yogyakarta) and update every 60 seconds
+
+  // Fungsi untuk mengirim pesan ke aplikasi Blynk
+  void handleLog() {
+    String message = "Aktif";
+    
+    // Ambil waktu saat ini
+    String currentTime = timeClient.getFormattedTime();
+
+    Serial.println("Terminal: " + currentTime);
+
+    Blynk.virtualWrite(V0, message);
+    Blynk.virtualWrite(V1, currentTime);
+  }
+
+  void setup() {
+    Serial.begin(115200);
+    
+    Serial.println("Connecting to Blynk...");
+    Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("WiFi connected!"); 
+    } else {
+      Serial.println("WiFi connection failed!");
+    }
+
+    // Inisialisasi NTP client
+    timeClient.begin();
+
+    // Pastikan waktu telah diupdate oleh NTP
+    while (!timeClient.update()) {
+      Serial.println("Menunggu waktu dari NTP...");
+      delay(1000);  // Tunggu selama 1 detik dan coba lagi
+    }
+
+    // Setelah waktu NTP siap, panggil handleLog hanya sekali
+    handleLog();
+
+    Serial.println("Blynk connected!");
+  }
+
+  void loop() {
+    Blynk.run();
+    timeClient.update();  // Update NTP time
+    // Fungsi handleLog hanya dipanggil sekali di setup, tidak perlu lagi di loop
+    delay(10000);  // Kirim pesan setiap 10 detik (jika diperlukan untuk proses lainnya)
+  }
